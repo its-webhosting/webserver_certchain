@@ -1,0 +1,34 @@
+#
+# webserver_certchain
+#
+# A bash function to show a web server's certificate chain
+#
+# Version 2.0.0, 2024-06-05
+#
+# For updated versions, check
+# https://gist.github.com/markmont/2a07c4d0edce2e4e9f46ed76b7b59f3f
+#
+# Usage:
+#   webserver_certchain website_fqdn [webserver_ip|webserver_fqdn] [port]
+#
+# Examples:
+#
+#    Normal usage:
+#    webserver_certchain umich.edu
+#
+#    Non-standard port
+#    webserver_certchain example.com "" 8443
+#
+#    Bypass DNS (useful for bypassing Cloudflare to check the certificate
+#    on a back-end web server or load balancer)
+#    webserver_certchain safecomputing.umich.edu vm-cf-php7-lb.www.umich.edu
+#
+
+function webserver_certchain {
+    [[ -z "$1" ]] && \
+        echo "Usage: ${FUNCNAME[0]} website_fqdn [webserver_ip|webserver_fqdn] [port]" \
+        && return
+    openssl s_client -connect "${2:-$1}:${3:-443}" -servername "${1}" \
+        -showcerts < /dev/null 2> /dev/null | \
+        perl -n -e '$c .= $_; if (m/^\-+END(\s\w+)?\sCERTIFICATE\-+$/) { print qx(echo "$c" | openssl x509 -in /dev/stdin -noout -subject -issuer -enddate -alias) . "\n"; $c =""; }'
+}
