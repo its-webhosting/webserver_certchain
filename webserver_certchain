@@ -3,10 +3,15 @@
 #
 # A bash function to show a web server's certificate chain
 #
-# Version 3.0.0, 2025-02-24
+# Version 3.0.1, 2025-02-24
 #
 # For updated versions, check
 # https://github.com/its-webhosting/webserver_certchain/blob/main/webserver_certchain
+#
+# Installation:
+#   1. Either download this file, or copy the contents to your clipboard
+#   2. Append it to your ~/.bashrc file
+#   3. Restart any existing bash shells to make the new function available
 #
 # Usage:
 #   webserver_certchain website_fqdn [webserver_ip|webserver_fqdn] [port]
@@ -21,7 +26,8 @@
 #
 #    Bypass DNS (useful for bypassing Cloudflare to check the certificate
 #    on a back-end web server or load balancer)
-#    webserver_certchain safecomputing.umich.edu vm-cf-php7-lb.www.umich.edu
+#    webserver_certchain its.umich.edu live-its-its-umich-drupal7.pantheonsite.io
+#    webserver_certchain its.umich.edu 23.185.0.3
 #
 
 function webserver_certchain {
